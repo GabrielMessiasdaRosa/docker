@@ -1,0 +1,113 @@
+docker run -i -t ubuntu:latest bash
+
+-i ativa o modo std in modo interativo. Atacha o terminal do container ao terminal do OS principal da maquina. 
+-d ativa o modo detached, ou seja, o container roda em background. -d significa detach.
+-t ativa o TTY que permite executar comandos no terminal atachado. 
+bash comando a ser executado no container. Ultimas flag do comando no caso bash executa o bash do linux, no caso ubuntu:lts. 
+
+
+comandos bons para usar no docker: 
+
+comando: docker system prune
+output:
+WARNING! This will remove:
+  - all stopped containers
+  - all networks not used by at least one container
+  - all dangling images
+  - all dangling build cache
+
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+5e53e6d23bbe604c6ab69d91ac0df6a09837868618e036e57c96b220a1423122
+a3d86221a269db1b3eecb5c83b338bee1e7cd7772ceb0ff65906dcb575ef8da9
+
+Deleted Networks:
+nest
+
+Deleted build cache objects:
+1juh1u9c249drwymuxepibuum
+io2fp3duj5fhri9ggrz30lrl2
+[resto do log]
+
+Total reclaimed space: 870.4MB
+
+comando: docker system prune -a
+output:
+WARNING! This will remove:
+  - all stopped containers
+  - all networks not used by at least one container
+  - all images without at least one container associated to them
+  - all build cache
+
+Are you sure you want to continue? [y/N] y
+Deleted Images:
+untagged: hello-world:latest
+untagged: hello-world@sha256:4f53e2564790c8e7856ec08e384732aa38dc43c52f02952483e3f003afbf23db
+deleted: sha256:9c7a54a9a43cca047013b82af109fe963fde787f63f9e016fdc3384500c2823d
+deleted: sha256:01bb4fce3eb1b56b05adf99504dafd31907a5aadac736e36b27595c8b92f07f1
+
+Total reclaimed space: 13.26kB
+
+
+## anotações
+
+docker run -d -p 8080:80 nginx
+
+roda o nginx em background na porta 8080 do host e na porta 80 do container.
+
+Impossivel deletar um container que esta rodando.
+mas é possivel deletar um container que esta rodando com a flag -f
+docker rm -f container_id
+
+
+para executar comandor dentro do container:
+docker exec -it container_id bash
+
+para trabalhar com o nginx precisamos dar um 
+cd /usr/share/nginx/html
+
+Tudo que é gravado em um container é perdido quando o container é deletado.
+
+
+### VOLUMES
+
+Um bind mount consiste em montar um diretorio do host dentro do container.
+docker run -p 1337:80 --mount type=bind,source="$(pwd)"/docker/gabriel-docker/html,target=/usr/share/nginx/html nginx
+
+ja o gerenciamento de volumes, apesar de semelhante, nao é o mesmo que um bind mount
+
+Um volume é um diretorio que é compartilhado entre o host e o container.
+docker run -d -p 8080:80 -v "$(pwd)"/docker/html:/usr/share/nginx/html nginx
+
+com a flag -v é possivel criar pastas no container e no host. 
+
+comandos 'volume'
+
+docker volume ls
+docker volume create nome_do_volume
+docker volume inspect nome_do_volume
+docker volume rm nome_do_volume
+
+anotaçoes sobre volumes: 
+
+volumes compartilham dados entre containers facilmente.
+docker run --name meucontainer1 -d --mount source=meuvolume,target=/app nginx
+docker exec -it meucontainer1 bash
+  # cd /app
+  # touch arquivo.txt
+  # exit
+
+docker run --name meucontainer2 -d --mount source=meuvolume,target=/app nginx
+docker exec -it meucontainer2 bash
+  # cd /app
+  # ls
+  # exit
+
+tambem é possivel montar volumes com a flag -v 
+docker run --name meucontainer1 -d -v meuvolume:/app nginx
+
+é um exelente exemplo de usabilidade de volumes. 
+
+
+### DOCKERFILE
+
