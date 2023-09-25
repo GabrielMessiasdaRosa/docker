@@ -1,0 +1,38 @@
+html {
+  font-family: "Courier New", Courier, monospace;
+}
+
+body {
+  background-color: dimgrey;
+  color: white;
+  display: flex;
+  width: 100dvw;
+  height: 100dvh;
+  padding: 24px;
+  justify-content: center;
+  align-items: start;
+}
+
+.blog-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+}
+
+.blog-title {
+  font-size: 36px;
+  color: rgb(4, 29, 112);
+  margin-bottom: 24px;
+}
+
+.sendBtn {
+  background-color: rgb(4, 29, 112);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-top: 8px;
+  cursor: pointer;
+}
