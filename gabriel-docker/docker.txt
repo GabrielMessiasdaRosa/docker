@@ -111,3 +111,14 @@ docker run --name meucontainer1 -d -v meuvolume:/app nginx
 
 ### DOCKERFILE
 
+
+
+### Networks 
+
+exitem 4 tipos de networks no docker: 
+
+bridge: rede padrao do docker. Mais comum.
+host: o container compartilha a rede do host. 
+overlay: permite que containers em hosts diferentes se comuniquem. 
+(docker swarm: permite que containers em hosts diferentes se comuniquem. )
+macvlan: permite que o container tenha um MAC address. 
