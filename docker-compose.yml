@@ -1,26 +1,33 @@
 version: "3"
 
 services:
-  laravel:
-    build:
-      context: ./laravel
-      dockerfile: Dockerfile.prod
-    image: motivado/laravel:prod
-    container_name: laravel
-    networks:
-      - laranet
-
-  nginx:
+  project-x-node-app:
     build: 
-      context: ./nginx
-      dockerfile: Dockerfile.prod
-    image: motivado/nginx:prod
-    container_name: nginx
-    networks:
-      - laranet
+      context: node
+    container_name: project-x-node-app
+    networks: 
+      - project-x-network
+    volumes:
+      - ./node:/usr/src/project-x-node-app
+    tty: true
     ports:
-      - "8080:80"
+      - "1337:3000"
+
+
+  project-x-db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: project-x-db
+    restart: always
+    tty: true
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=project-x-db
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - project-x-network
 
 networks:
-  laranet:
+  project-x-network:
     driver: bridge
