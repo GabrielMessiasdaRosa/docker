@@ -1,28 +1,31 @@
-FROM php:latest AS builder
+# Stage 1: Cointroi a aplicaçao laravel
+FROM php:cli AS builder
 
-## WORKDIR DO PROJETO
 WORKDIR /var/www
 
-
-## Instalaçao de pacotes obrigatorios
 RUN apt-get update && \
-    apt-get install libzip-dev -y && \ 
-    ## Instalaçao do pacote zip para o php ( tenho que ver como isso funciona melhor, parece interessante )
+    apt-get install libzip-dev -y && \
     docker-php-ext-install zip
 
-## Instalaçao do PHP
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php -r "if (hash_file('sha384', 'composer-setup.php') === 'e21205b207c3ff031906575712edab6f13eb0b361f2085f1f1237b7126d785e826a450292b6cfd1d64d92e6563bbde02') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
     php composer-setup.php && \
     php -r "unlink('composer-setup.php');"
 
-## Criando o projeto laravel
-RUN php composer.phar create-project laravel/laravel laravel
-## PRod 
+RUN php composer.phar create-project --prefer-dist laravel/laravel laravel
+
+# Stage 3: Cria o container php-fpm ( dar mais uma olhada em fpm e FASTcgi pra entender melhor esses caras )
 FROM php:fpm-alpine
+
 WORKDIR /var/www
+
 RUN rm -rf /var/www/html
 COPY --from=builder /var/www/laravel .
+
+# Cria um 'symbolic link' do dir public para html
+RUN ln -s public html
+
+# Seta o proprietario
 RUN chown -R www-data:www-data /var/www
+
 EXPOSE 9000
-CMD ["php=fpm"]
+CMD ["php-fpm"]
