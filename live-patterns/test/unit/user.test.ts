@@ -17,19 +17,19 @@ describe("UserUnitTest", () => {
   it("Shoud not create user if name is invalid", () => {
     expect(
       () => new User("Gabriel", "gabriel@example.com", "MyPassword123", 25)
-    ).toThrow(new Error("Invalid name"));
+    ).toThrow(new Error("Invalid parameter"));
   });
   it("Shoud not create user if email is invalid", () => {
     expect(
       () => new User("Gabriel Messias", "gabriel@example", "MyPassword123", 25)
-    ).toThrow(new Error("Invalid email format"));
+    ).toThrow(new Error("Invalid parameter"));
   });
   it("Shoud not create user if password is invalid", () => {
     expect(
       () => new User("Gabriel Messias", "gabriel@example.com", "321", 25)
     ).toThrow(
       new Error(
-        "Password must contain at last one letter, one number and min of 8 characters."
+        "Invalid parameter"
       )
     );
   });
@@ -37,6 +37,6 @@ describe("UserUnitTest", () => {
     expect(
       () =>
         new User("Gabriel Messias", "gabriel@example.com", "MyPassword123", 16)
-    ).toThrow(new Error("Only for +18"));
+    ).toThrow(new Error("Invalid parameter"));
   });
 });

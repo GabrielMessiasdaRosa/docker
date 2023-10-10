@@ -1,3 +1,8 @@
+import UserAgeSpecification from "../specification/user-age.specification";
+import UserEmailSpecification from "../specification/user-email.specification";
+import UserNameSpecification from "../specification/user-name.specification";
+import UserPasswordSpecification from "../specification/user-password.specification";
+
 export default class User {
   constructor(
     readonly name: string,
@@ -5,28 +10,19 @@ export default class User {
     readonly password: string,
     readonly age: number
   ) {
-    if (name.split(" ").length < 2) {
-      throw new Error("Invalid name");
-    }
-    if (
-      !String(email)
-        .toLowerCase()
-        .match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
-    ) {
-      throw new Error("Invalid email format");
-    }
+    const nameSpecification = new UserNameSpecification();
+    const emailSpecification = new UserEmailSpecification();
+    const passwordSpecification = new UserPasswordSpecification();
+    const ageSpecification = new UserAgeSpecification();
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    const testPassword = !passwordRegex.test(String(password));
-    if (testPassword) {
-      throw new Error(
-        "Password must contain at last one letter, one number and min of 8 characters."
-      );
-    }
-    if (age < 18) {
-      {
-        throw new Error("Only for +18");
-      }
+    if (
+      !nameSpecification
+        .and(emailSpecification)
+        .and(passwordSpecification)
+        .and(ageSpecification)
+        .isSatisfiedBy(this)
+    ) {
+      throw new Error("Invalid parameter");
     }
   }
 }

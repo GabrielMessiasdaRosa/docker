@@ -19,6 +19,6 @@ export class AndSpecification<T> extends AbstractSpecification<T> {
     this.right = right;
   }
   isSatisfiedBy(t: T): boolean {
-    throw new Error("Method not implemented.");
+    return this.left.isSatisfiedBy(t) && this.right.isSatisfiedBy(t);
   }
 }
