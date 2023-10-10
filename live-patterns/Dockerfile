@@ -1,7 +1,9 @@
-FROM node:latest
+FROM node:18
 
 WORKDIR /usr/src/app
 
-COPY ./dist .
+COPY . .
 
-CMD ["node", "index.js"]
+RUN npm i 
+
+CMD ["npm", "run", "start:prod"]

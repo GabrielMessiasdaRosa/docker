@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  live-patterns:
+    image: live-patterns
+    container_name: live-patterns
+    build: .
+    volumes:
+      - .:/src
+    networks:
+      - live-patterns-network
+
+  nginx:
+    image: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - live-patterns
+    networks:
+      - live-patterns-network
+
+networks:
+  live-patterns-network:
+    driver: bridge

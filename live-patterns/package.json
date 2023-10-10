@@ -2,9 +2,11 @@
   "name": "node",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/src/main.js",
   "scripts": {
-    "build": "babel ./src -d dist",
+    "start:dev": "tsc && node dist/src/main.js",
+    "start:prod": "jest && tsc && node dist/src/main.js",
+    "build": "tsc",
     "test": "jest"
   },
   "keywords": [],
@@ -19,5 +21,9 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.18",
+    "express": "^4.18.2"
   }
 }
